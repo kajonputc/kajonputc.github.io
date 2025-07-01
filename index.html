@@ -1,7 +1,92 @@
 <!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Hello Github Pages</title>
-  <body>
-    <h1>Hello Github Pages</h1>
-  </body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display JSON Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        .container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #0056b3;
+        }
+        .item {
+            border-bottom: 1px solid #eee;
+            padding: 10px 0;
+            margin-bottom: 10px;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .item p {
+            margin: 5px 0;
+        }
+        .item strong {
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>User List from JSON</h1>
+        <div id="data-container">
+            Loading data...
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch and display JSON data
+        async function fetchJsonData() {
+            try {
+                // Fetch the JSON file from the same directory
+                const response = await fetch('data.json');
+
+                // Check if the request was successful
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                // Parse the JSON data
+                const data = await response.json();
+
+                // Get the container element
+                const dataContainer = document.getElementById('data-container');
+
+                // Clear any initial loading message
+                dataContainer.innerHTML = '';
+
+                // Loop through the data and create HTML elements to display it
+                data.forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.classList.add('item'); // Add a class for styling
+
+                    itemDiv.innerHTML = `
+                        <p><strong>ID:</strong> ${item.id}</p>
+                        <p><strong>Name:</strong> ${item.name}</p>
+                        <p><strong>Age:</strong> ${item.age}</p>
+                        <p><strong>City:</strong> ${item.city}</p>
+                    `;
+                    dataContainer.appendChild(itemDiv);
+                });
+
+            } catch (error) {
+                console.error('Error fetching or parsing JSON:', error);
+                document.getElementById('data-container').innerHTML = '<p style="color: red;">Failed to load data. Please check the console for more details.</p>';
+            }
+        }
+
+        // Call the function when the page loads
+        document.addEventListener('DOMContentLoaded', fetchJsonData);
+    </script>
+</body>
 </html>
